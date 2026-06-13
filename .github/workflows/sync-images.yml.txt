@@ -1,0 +1,25 @@
+name: Sync KubeSphere Images to ACR
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        default: "v4.1.2"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to ACR
+        run: |
+          echo "afoelkjUkjdla59d" | docker login registry.cn-beijing.aliyuncs.com \
+            --username "aliyun8695051904" --password-stdin
+      - name: Sync images
+        run: |
+          VERSION="v4.1.2"
+          for img in ks-apiserver ks-console ks-controller-manager ks-upgrade; do
+            docker pull kubesphere/${img}:${VERSION}
+            docker tag kubesphere/${img}:${VERSION} registry.cn-beijing.
+
+aliyuncs.com/kubesphere/${img}:${VERSION}
+            docker push registry.cn-beijing.aliyuncs.com/kubesphere/${img}:${VERSION}
+          done
